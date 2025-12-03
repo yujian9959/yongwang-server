@@ -112,20 +112,12 @@ $RECYCLE.BIN/
 # ============================================
 
 spring-boot-*.log
-application-*.yml.bak
-application-*.properties.bak
 
 # ============================================
 # Docker
 # ============================================
 
 # Docker 数据目录（如果在项目内）
-/data/
-docker-compose.override.yml
-
-# Docker Compose 配置文件（包含敏感信息，使用 .example 模板代替）
-docker-compose.yml
-docker-compose.app-only.yml
 !docker-compose.yml.example
 !docker-compose.app-only.yml.example
 
@@ -142,25 +134,13 @@ docker-compose.app-only.yml
 # ============================================
 
 # 包含敏感信息的配置文件（使用 .example 模板代替）
-application.yml
-application-prod.yml
-application.properties
-application-prod.properties
 !application.yml.example
 !application-prod.yml.example
 !application.properties.example
 !application-prod.properties.example
 
-# 本地配置
-application-local.yml
-application-local.properties
-application-dev-local.yml
 
-# 环境变量文件
-.env
-.env.local
-.env.*.local
-!.env.example
+
 
 # 备份文件
 *.bak
