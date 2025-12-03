@@ -62,9 +62,11 @@ services:
     restart: always
     ports:
       - "${SERVER_PORT:-8083}:8083"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     environment:
       SPRING_PROFILES_ACTIVE: ${SPRING_PROFILES_ACTIVE:-prod}
-      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/${DB_NAME:-yongwang_db}?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai&useSSL=false&allowPublicKeyRetrieval=true
+      SPRING_DATASOURCE_URL: jdbc:mysql://${DB_HOST:-mysql}:${DB_PORT:-3306}/${DB_NAME:-yongwang_db}?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai&useSSL=false&allowPublicKeyRetrieval=true
       SPRING_DATASOURCE_USERNAME: ${DB_USERNAME:-root}
       SPRING_DATASOURCE_PASSWORD: ${DB_PASSWORD}
       SPRING_REDIS_HOST: redis
@@ -72,6 +74,7 @@ services:
       SPRING_REDIS_PASSWORD: ${REDIS_PASSWORD:-}
       SPRING_REDIS_DATABASE: ${REDIS_DATABASE:-1}
       JWT_SECRET: ${JWT_SECRET}
+      JWT_EXPIRATION: ${JWT_EXPIRATION:-86400000}
       ALIYUN_OSS_ENDPOINT: ${ALIYUN_OSS_ENDPOINT}
       ALIYUN_OSS_BUCKET: ${ALIYUN_OSS_BUCKET}
       ALIYUN_ACCESS_KEY_ID: ${ALIYUN_ACCESS_KEY_ID}
@@ -82,8 +85,6 @@ services:
     volumes:
       - ./logs:/app/logs
     depends_on:
-      mysql:
-        condition: service_healthy
       redis:
         condition: service_healthy
     networks:

@@ -61,4 +61,4 @@ HEALTHCHECK --interval=30s --timeout=3s --start-period=60s --retries=3 \
     CMD wget --quiet --tries=1 --spider http://localhost:8083/admin/health || exit 1
 
 # 启动应用
-ENTRYPOINT ["sh", "-c", "java $JAVA_OPTS -jar /app/yongwang-admin.jar --spring.profiles.active=prod"]
+ENTRYPOINT ["sh", "-c", "java $JAVA_OPTS -jar /app/yongwang-admin.jar"]
