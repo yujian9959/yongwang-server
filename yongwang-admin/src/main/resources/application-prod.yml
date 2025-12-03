@@ -84,8 +84,8 @@ aliyun:
 # 微信小程序配置
 wechat:
   mini:
-    appid: ${WECHAT_MINI_APPID}
-    secret: ${WECHAT_MINI_SECRET}
+    appid: wxdadcf0b9ac5e7c98
+    secret: fc07e4508b39932c8e3b9272759439b6
 
 # 日志配置（生产环境）
 logging:
