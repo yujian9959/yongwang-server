@@ -1,0 +1,195 @@
+# ============================================
+# 永旺农资项目 - Git 忽略文件
+# ============================================
+
+# Maven
+target/
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
+dependency-reduced-pom.xml
+buildNumber.properties
+.mvn/timing.properties
+.mvn/wrapper/maven-wrapper.jar
+
+# Gradle
+.gradle
+.claude
+
+# ============================================
+# IDE 配置文件
+# ============================================
+
+# IntelliJ IDEA
+.idea/
+*.iws
+*.iml
+*.ipr
+out/
+!**/src/main/**/out/
+!**/src/test/**/out/
+
+# Eclipse
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+bin/
+!**/src/main/**/bin/
+!**/src/test/**/bin/
+
+# VS Code
+.vscode/
+*.code-workspace
+.history/
+
+# NetBeans
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+
+# ============================================
+# 日志文件
+# ============================================
+
+logs/
+*.log
+log/
+*.log.*
+*.log.gz
+
+# ============================================
+# 临时文件
+# ============================================
+
+*.tmp
+*.temp
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# ============================================
+# 操作系统文件
+# ============================================
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# Linux
+*~
+.directory
+.Trash-*
+
+# ============================================
+# Java 编译文件
+# ============================================
+
+*.class
+*.jar
+*.war
+*.ear
+*.zip
+*.tar.gz
+*.rar
+
+# ============================================
+# Spring Boot
+# ============================================
+
+spring-boot-*.log
+application-*.yml.bak
+application-*.properties.bak
+
+# ============================================
+# Docker
+# ============================================
+
+# Docker 数据目录（如果在项目内）
+/data/
+docker-compose.override.yml
+
+# Docker Compose 配置文件（包含敏感信息，使用 .example 模板代替）
+docker-compose.yml
+docker-compose.app-only.yml
+!docker-compose.yml.example
+!docker-compose.app-only.yml.example
+
+# ============================================
+# 数据库
+# ============================================
+
+*.db
+*.sqlite
+*.sqlite3
+
+# ============================================
+# 敏感配置文件
+# ============================================
+
+# 包含敏感信息的配置文件（使用 .example 模板代替）
+application.yml
+application-prod.yml
+application.properties
+application-prod.properties
+!application.yml.example
+!application-prod.yml.example
+!application.properties.example
+!application-prod.properties.example
+
+# 本地配置
+application-local.yml
+application-local.properties
+application-dev-local.yml
+
+# 环境变量文件
+.env
+.env.local
+.env.*.local
+!.env.example
+
+# 备份文件
+*.bak
+*.backup
+*.old
+
+# 压缩文件
+*.7z
+*.dmg
+*.gz
+*.iso
+*.jar
+*.rar
+*.tar
+*.zip
+
+# 上传文件目录
+uploads/
+upload/
+files/
+
+# 临时目录
+tmp/
+temp/
+cache/
+
+# 编译输出
+dist/
+build/

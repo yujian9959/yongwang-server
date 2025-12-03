@@ -1,0 +1,2 @@
+insert into yongwang_db.yw_admin (id, uid, username, password, real_name, phone, email, avatar, role_uid, status, last_login_time, last_login_ip, create_time, update_time, create_by, update_by, deleted)
+values  (5, 'admin001', 'admin', '$2a$10$x41ppuoU1Tt7SA32Cd6cEu36JCpAXLH3wGroLnUjgJXVtGU3Erj1q', '超级管理员', null, null, null, 'role001', 1, '2025-12-01 01:46:46', '0:0:0:0:0:0:0:1', '2025-12-01 01:42:23', '2025-12-01 01:46:46', null, null, 0);

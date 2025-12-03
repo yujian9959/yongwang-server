@@ -1,0 +1,2 @@
+insert into yongwang_db.yw_user (id, uid, openid, unionid, nickname, avatar, phone, gender, birthday, level, points, balance, total_amount, order_count, status, register_time, last_login_time, create_time, update_time, create_by, update_by, deleted)
+values  (12, 'b896022fb7494a2fb556eda248e00623', 'oMaWB13vO7Tecs1vWC-PBEPHxK2M', null, 'tyu', null, null, 0, null, 0, 0, 0.00, 0.00, 0, 1, '2025-12-02 00:10:18', '2025-12-02 00:38:13', '2025-12-02 00:10:18', '2025-12-02 00:38:12', null, null, 0);

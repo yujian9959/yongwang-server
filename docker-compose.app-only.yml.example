@@ -1,0 +1,39 @@
+version: '3.8'
+
+services:
+  # 永旺农资应用服务（仅应用，连接已有的 MySQL 和 Redis）
+  yongwang-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: yongwang-app
+    restart: always
+    ports:
+      - "${SERVER_PORT:-8083}:8083"
+    environment:
+      SPRING_PROFILES_ACTIVE: ${SPRING_PROFILES_ACTIVE:-prod}
+      SPRING_DATASOURCE_URL: jdbc:mysql://host.docker.internal:33061/${DB_NAME:-yongwang_db}?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai&useSSL=false&allowPublicKeyRetrieval=true
+      SPRING_DATASOURCE_USERNAME: ${DB_USERNAME:-root}
+      SPRING_DATASOURCE_PASSWORD: ${DB_PASSWORD}
+      SPRING_REDIS_HOST: host.docker.internal
+      SPRING_REDIS_PORT: ${REDIS_PORT:-6379}
+      SPRING_REDIS_PASSWORD: ${REDIS_PASSWORD:-}
+      SPRING_REDIS_DATABASE: ${REDIS_DATABASE:-1}
+      JWT_SECRET: ${JWT_SECRET}
+      ALIYUN_OSS_ENDPOINT: ${ALIYUN_OSS_ENDPOINT}
+      ALIYUN_OSS_BUCKET: ${ALIYUN_OSS_BUCKET}
+      ALIYUN_ACCESS_KEY_ID: ${ALIYUN_ACCESS_KEY_ID}
+      ALIYUN_ACCESS_KEY_SECRET: ${ALIYUN_ACCESS_KEY_SECRET}
+      ALIYUN_OSS_URL_PREFIX: ${ALIYUN_OSS_URL_PREFIX}
+      WECHAT_MINI_APPID: ${WECHAT_MINI_APPID}
+      WECHAT_MINI_SECRET: ${WECHAT_MINI_SECRET}
+    volumes:
+      - ./logs:/app/logs
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:8083/admin/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s

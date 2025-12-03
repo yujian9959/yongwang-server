@@ -1,0 +1,100 @@
+version: '3.8'
+
+services:
+  # MySQL 数据库服务
+  mysql:
+    image: mysql:8.0
+    container_name: yongwang-mysql
+    restart: always
+    ports:
+      - "33061:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+      MYSQL_DATABASE: ${DB_NAME:-yongwang_db}
+      MYSQL_CHARACTER_SET_SERVER: utf8mb4
+      MYSQL_COLLATION_SERVER: utf8mb4_unicode_ci
+      TZ: Asia/Shanghai
+    volumes:
+      - /data/docker/yongwang/mysql/data:/var/lib/mysql
+      - /data/docker/yongwang/mysql/conf:/etc/mysql/conf.d
+      - /data/docker/yongwang/mysql/logs:/var/log/mysql
+      - ./sql/init.sql:/docker-entrypoint-initdb.d/01-init.sql
+      - ./sql/data_init.sql:/docker-entrypoint-initdb.d/02-data_init.sql
+    command:
+      - --default-authentication-plugin=mysql_native_password
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+      - --max_connections=1000
+      - --max_allowed_packet=64M
+    networks:
+      - yongwang-network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-p${DB_PASSWORD}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Redis 缓存服务
+  redis:
+    image: redis:7-alpine
+    container_name: yongwang-redis
+    restart: always
+    ports:
+      - "6379:6379"
+    volumes:
+      - /data/docker/yongwang/redis/data:/data
+      - /data/docker/yongwang/redis/conf:/usr/local/etc/redis
+    command: redis-server --appendonly yes --maxmemory 512mb --maxmemory-policy allkeys-lru
+    networks:
+      - yongwang-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+
+  # 永旺农资应用服务
+  yongwang-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: yongwang-app
+    restart: always
+    ports:
+      - "${SERVER_PORT:-8083}:8083"
+    environment:
+      SPRING_PROFILES_ACTIVE: ${SPRING_PROFILES_ACTIVE:-prod}
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/${DB_NAME:-yongwang_db}?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai&useSSL=false&allowPublicKeyRetrieval=true
+      SPRING_DATASOURCE_USERNAME: ${DB_USERNAME:-root}
+      SPRING_DATASOURCE_PASSWORD: ${DB_PASSWORD}
+      SPRING_REDIS_HOST: redis
+      SPRING_REDIS_PORT: ${REDIS_PORT:-6379}
+      SPRING_REDIS_PASSWORD: ${REDIS_PASSWORD:-}
+      SPRING_REDIS_DATABASE: ${REDIS_DATABASE:-1}
+      JWT_SECRET: ${JWT_SECRET}
+      ALIYUN_OSS_ENDPOINT: ${ALIYUN_OSS_ENDPOINT}
+      ALIYUN_OSS_BUCKET: ${ALIYUN_OSS_BUCKET}
+      ALIYUN_ACCESS_KEY_ID: ${ALIYUN_ACCESS_KEY_ID}
+      ALIYUN_ACCESS_KEY_SECRET: ${ALIYUN_ACCESS_KEY_SECRET}
+      ALIYUN_OSS_URL_PREFIX: ${ALIYUN_OSS_URL_PREFIX}
+      WECHAT_MINI_APPID: ${WECHAT_MINI_APPID}
+      WECHAT_MINI_SECRET: ${WECHAT_MINI_SECRET}
+    volumes:
+      - ./logs:/app/logs
+    depends_on:
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - yongwang-network
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:8083/admin/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+
+networks:
+  yongwang-network:
+    driver: bridge

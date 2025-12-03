@@ -1,0 +1,2 @@
+insert into yongwang_db.yw_user_address (id, uid, user_uid, receiver_name, receiver_phone, province, city, district, detail_address, postal_code, is_default, tag, create_time, update_time, create_by, update_by, deleted)
+values  (1, '38c23266610b4e80bb38b94ac600db78', 'a59236443e7244ef8111837c833c64b8', '玩儿为人', '14343434343', '北京市', '北京市', '东城区', '4343', null, 1, null, '2025-11-29 23:34:32', '2025-11-29 23:34:32', null, null, 0);

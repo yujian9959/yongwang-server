@@ -1,0 +1,2 @@
+insert into yongwang_db.yw_seckill_activity (id, uid, name, start_time, end_time, status, create_time, update_time, create_by, update_by, deleted)
+values  (1, 'seckill001', '每日秒杀', '2025-11-30 23:38:32', '2025-12-01 23:38:32', 1, '2025-11-30 23:38:32', '2025-11-30 23:38:32', null, null, 0);

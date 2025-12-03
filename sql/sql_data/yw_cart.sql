@@ -1,0 +1,6 @@
+insert into yongwang_db.yw_cart (id, uid, user_uid, spu_uid, sku_uid, quantity, selected, create_time, update_time, create_by, update_by, deleted)
+values  (43, 'bc020d1e12da44d29d0d7703c409ce88', 'fc654f699b6e46f38209b1940f67d2e8', 'spu000023', null, 2, 1, '2025-12-01 00:32:33', '2025-12-01 00:32:39', null, null, 0),
+        (44, '35c92d3798ac4ba4afc0650a989e1765', 'fc654f699b6e46f38209b1940f67d2e8', 'spu000024', null, 4, 1, '2025-12-01 00:32:41', '2025-12-01 00:32:41', null, null, 0),
+        (45, '8f52da0037e5453c91cc2b5c2f26771c', 'fc654f699b6e46f38209b1940f67d2e8', 'spu000048', null, 3, 1, '2025-12-01 00:32:52', '2025-12-01 00:32:52', null, null, 0),
+        (46, '3f159b2e40294203bd68bf84b7b21a28', 'b896022fb7494a2fb556eda248e00623', 'spu000048', null, 14, 1, '2025-12-02 00:12:30', '2025-12-02 00:12:32', null, null, 0),
+        (47, 'c3f2efa2aff949eb93f10c76faf4b59b', 'b896022fb7494a2fb556eda248e00623', 'spu000078', null, 9, 1, '2025-12-02 00:12:37', '2025-12-02 00:12:38', null, null, 0);

@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.yongwang</groupId>
+    <artifactId>yongwang-server</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+    <packaging>pom</packaging>
+
+    <name>永旺农资后端服务</name>
+    <description>永旺农资电商平台后端服务 - Spring Boot 3.x + JDK 21</description>
+
+    <modules>
+        <module>yongwang-common</module>
+        <module>yongwang-core</module>
+        <module>yongwang-service</module>
+        <module>yongwang-admin</module>
+    </modules>
+
+    <properties>
+        <!-- Java版本 -->
+        <java.version>21</java.version>
+        <maven.compiler.source>21</maven.compiler.source>
+        <maven.compiler.target>21</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+
+        <!-- Spring Boot版本 -->
+        <spring-boot.version>3.2.5</spring-boot.version>
+
+        <!-- 数据库相关 -->
+        <mybatis-plus.version>3.5.5</mybatis-plus.version>
+        <mysql.version>8.0.33</mysql.version>
+
+        <!-- 安全相关 -->
+        <jjwt.version>0.12.5</jjwt.version>
+
+        <!-- 工具库 -->
+        <hutool.version>5.8.26</hutool.version>
+        <lombok.version>1.18.30</lombok.version>
+
+        <!-- API文档 -->
+        <springdoc.version>2.3.0</springdoc.version>
+
+        <!-- 其他 -->
+        <commons-lang3.version>3.14.0</commons-lang3.version>
+        <commons-io.version>2.15.1</commons-io.version>
+    </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <!-- Spring Boot Dependencies -->
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-dependencies</artifactId>
+                <version>${spring-boot.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+            <!-- 项目内部模块 -->
+            <dependency>
+                <groupId>com.yongwang</groupId>
+                <artifactId>yongwang-common</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.yongwang</groupId>
+                <artifactId>yongwang-core</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.yongwang</groupId>
+                <artifactId>yongwang-service</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <!-- MyBatis-Plus -->
+            <dependency>
+                <groupId>com.baomidou</groupId>
+                <artifactId>mybatis-plus-spring-boot3-starter</artifactId>
+                <version>${mybatis-plus.version}</version>
+            </dependency>
+
+            <!-- MySQL驱动 -->
+            <dependency>
+                <groupId>com.mysql</groupId>
+                <artifactId>mysql-connector-j</artifactId>
+                <version>${mysql.version}</version>
+            </dependency>
+
+            <!-- JWT -->
+            <dependency>
+                <groupId>io.jsonwebtoken</groupId>
+                <artifactId>jjwt-api</artifactId>
+                <version>${jjwt.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.jsonwebtoken</groupId>
+                <artifactId>jjwt-impl</artifactId>
+                <version>${jjwt.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.jsonwebtoken</groupId>
+                <artifactId>jjwt-jackson</artifactId>
+                <version>${jjwt.version}</version>
+            </dependency>
+
+            <!-- Hutool工具库 -->
+            <dependency>
+                <groupId>cn.hutool</groupId>
+                <artifactId>hutool-all</artifactId>
+                <version>${hutool.version}</version>
+            </dependency>
+
+            <!-- SpringDoc OpenAPI -->
+            <dependency>
+                <groupId>org.springdoc</groupId>
+                <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+                <version>${springdoc.version}</version>
+            </dependency>
+
+            <!-- Apache Commons -->
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-lang3</artifactId>
+                <version>${commons-lang3.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>commons-io</groupId>
+                <artifactId>commons-io</artifactId>
+                <version>${commons-io.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <!-- 所有子模块共享的依赖 -->
+    <dependencies>
+        <!-- Lombok -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>${lombok.version}</version>
+            <scope>provided</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-maven-plugin</artifactId>
+                    <version>${spring-boot.version}</version>
+                    <configuration>
+                        <excludes>
+                            <exclude>
+                                <groupId>org.projectlombok</groupId>
+                                <artifactId>lombok</artifactId>
+                            </exclude>
+                        </excludes>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>3.12.1</version>
+                    <configuration>
+                        <source>${java.version}</source>
+                        <target>${java.version}</target>
+                        <encoding>UTF-8</encoding>
+                        <parameters>true</parameters>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
+
+</project>

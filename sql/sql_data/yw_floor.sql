@@ -1,0 +1,5 @@
+insert into yongwang_db.yw_floor (id, uid, name, type, icon, bg_color, show_more, more_link, goods_count, sort, status, create_time, update_time, create_by, update_by, deleted)
+values  (1, 'floor001', '限时秒杀', 'seckill', '⚡', null, 1, '/pages/goods/list?type=seckill', 4, 1, 1, '2025-11-30 23:38:32', '2025-11-30 23:38:32', null, null, 0),
+        (2, 'floor002', '热卖爆款', 'hot', '🔥', null, 1, '/pages/goods/list?type=hot', 4, 2, 1, '2025-11-30 23:38:32', '2025-11-30 23:38:32', null, null, 0),
+        (3, 'floor003', '新品上市', 'new', '🆕', null, 1, '/pages/goods/list?type=new', 4, 3, 1, '2025-11-30 23:38:32', '2025-11-30 23:38:32', null, null, 0),
+        (4, 'floor004', '当季推荐', 'recommend', '🌾', null, 1, '/pages/goods/list?type=recommend', 4, 4, 1, '2025-11-30 23:38:32', '2025-11-30 23:38:32', null, null, 0);

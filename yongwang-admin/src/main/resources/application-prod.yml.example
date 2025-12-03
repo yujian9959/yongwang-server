@@ -1,0 +1,102 @@
+server:
+  port: 8083
+
+spring:
+  application:
+    name: yongwang-server
+
+  # 数据源配置（生产环境）
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://mysql:3306/yongwang_db?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true
+    username: root
+    password: ${DB_PASSWORD}
+    hikari:
+      minimum-idle: 10
+      maximum-pool-size: 50
+      idle-timeout: 30000
+      pool-name: YongwangHikariCP
+      max-lifetime: 1800000
+      connection-timeout: 30000
+
+  # Redis配置（生产环境）
+  data:
+    redis:
+      host: redis
+      port: 6379
+      password: ${REDIS_PASSWORD:}
+      database: 1
+      timeout: 10000ms
+      lettuce:
+        pool:
+          max-active: 20
+          max-wait: -1ms
+          max-idle: 10
+          min-idle: 5
+
+  # Jackson配置
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: Asia/Shanghai
+    serialization:
+      write-dates-as-timestamps: false
+
+# MyBatis-Plus配置
+mybatis-plus:
+  mapper-locations: classpath*:/mapper/**/*.xml
+  type-aliases-package: com.yongwang.core.entity
+  global-config:
+    db-config:
+      id-type: auto
+      logic-delete-field: deleted
+      logic-delete-value: 1
+      logic-not-delete-value: 0
+  configuration:
+    map-underscore-to-camel-case: true
+    # 生产环境关闭SQL日志
+    log-impl: org.apache.ibatis.logging.nologging.NoLoggingImpl
+
+# JWT配置
+jwt:
+  secret: ${JWT_SECRET}
+  expiration: 86400000  # 24小时
+  header: Authorization
+  prefix: "Bearer "
+
+# SpringDoc配置
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+    tags-sorter: alpha
+    operations-sorter: alpha
+
+# 阿里云OSS配置
+aliyun:
+  oss:
+    endpoint: ${ALIYUN_OSS_ENDPOINT}
+    bucket: ${ALIYUN_OSS_BUCKET}
+    access-key-id: ${ALIYUN_ACCESS_KEY_ID}
+    access-key-secret: ${ALIYUN_ACCESS_KEY_SECRET}
+    url-prefix: ${ALIYUN_OSS_URL_PREFIX}
+
+# 微信小程序配置
+wechat:
+  mini:
+    appid: ${WECHAT_MINI_APPID}
+    secret: ${WECHAT_MINI_SECRET}
+
+# 日志配置（生产环境）
+logging:
+  level:
+    root: INFO
+    com.yongwang: INFO
+    org.springframework.security: WARN
+  file:
+    name: /app/logs/yongwang.log
+  logback:
+    rollingpolicy:
+      max-file-size: 100MB
+      max-history: 30
+      total-size-cap: 10GB

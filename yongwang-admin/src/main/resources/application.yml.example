@@ -1,0 +1,93 @@
+server:
+  port: 8083
+
+spring:
+  application:
+    name: yongwang-server
+
+  # 数据源配置
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/yongwang_db?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true
+    username: root
+    password: ${DB_PASSWORD:123456}
+    hikari:
+      minimum-idle: 5
+      maximum-pool-size: 20
+      idle-timeout: 30000
+      pool-name: YongwangHikariCP
+      max-lifetime: 1800000
+      connection-timeout: 30000
+
+  # Redis配置
+  data:
+    redis:
+      host: localhost
+      port: 6379
+      password: ${REDIS_PASSWORD:}
+      database: 1
+      timeout: 10000ms
+      lettuce:
+        pool:
+          max-active: 8
+          max-wait: -1ms
+          max-idle: 8
+          min-idle: 0
+
+  # Jackson配置
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: Asia/Shanghai
+    serialization:
+      write-dates-as-timestamps: false
+
+# MyBatis-Plus配置
+mybatis-plus:
+  mapper-locations: classpath*:/mapper/**/*.xml
+  type-aliases-package: com.yongwang.core.entity
+  global-config:
+    db-config:
+      id-type: auto
+      logic-delete-field: deleted
+      logic-delete-value: 1
+      logic-not-delete-value: 0
+  configuration:
+    map-underscore-to-camel-case: true
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
+# JWT配置
+jwt:
+  secret: ${JWT_SECRET:yongwang-nongzi-jwt-secret-key-2024-very-long-secret}
+  expiration: 86400000  # 24小时
+  header: Authorization
+  prefix: "Bearer "
+
+# SpringDoc配置
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+    tags-sorter: alpha
+    operations-sorter: alpha
+
+# 阿里云OSS配置
+aliyun:
+  oss:
+    endpoint: ${ALIYUN_OSS_ENDPOINT:oss-cn-shanghai.aliyuncs.com}
+    bucket: ${ALIYUN_OSS_BUCKET:your-bucket-name}
+    access-key-id: ${ALIYUN_ACCESS_KEY_ID:your-access-key-id}
+    access-key-secret: ${ALIYUN_ACCESS_KEY_SECRET:your-access-key-secret}
+    url-prefix: ${ALIYUN_OSS_URL_PREFIX:http://your-bucket-name.oss-cn-shanghai.aliyuncs.com}
+
+# 微信小程序配置
+wechat:
+  mini:
+    appid: ${WECHAT_MINI_APPID:your-wechat-appid}
+    secret: ${WECHAT_MINI_SECRET:your-wechat-secret}
+
+# 日志配置
+logging:
+  level:
+    com.yongwang: debug
+    org.springframework.security: debug
