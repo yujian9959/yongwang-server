@@ -197,6 +197,130 @@ cd yongwang-admin/bin
 - **健康检查**: http://localhost:8083/admin/health
 - **API Docs**: http://localhost:8083/v3/api-docs
 
+## Nginx 反向代理配置
+
+### 配置说明
+
+项目已配置 Nginx 反向代理，通过域名访问后端 API：
+
+- **域名**: yongwang.zenmind.site
+- **代理端口**: 80 (HTTP) / 443 (HTTPS)
+- **后端端口**: 8083
+
+### Nginx 配置文件
+
+配置文件位置：`/usr/local/nginx/conf/nginx.conf`
+
+#### HTTP 配置（当前启用）
+
+```nginx
+server {
+    listen       80;
+    server_name  yongwang.zenmind.site;
+
+    # 应用限流
+    limit_req zone=req_limit burst=50 nodelay;
+    limit_conn conn_limit 20;
+
+    # 封禁恶意爬虫
+    if ($bad_bot) {
+        return 403;
+    }
+
+    # 敏感路径封禁
+    include /usr/local/nginx/conf/security/block_sensitive.conf;
+
+    # Let's Encrypt 证书验证
+    location ^~ /.well-known/acme-challenge/ {
+        root /usr/local/nginx/html;
+        allow all;
+    }
+
+    # 永旺农资后端 API
+    location / {
+        proxy_pass http://127.0.0.1:8083;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection 'upgrade';
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_cache_bypass $http_upgrade;
+
+        # 超时设置
+        proxy_connect_timeout 60s;
+        proxy_send_timeout 60s;
+        proxy_read_timeout 60s;
+
+        # 限制HTTP方法
+        limit_except GET HEAD POST PUT DELETE OPTIONS {
+            deny all;
+        }
+    }
+}
+```
+
+#### HTTPS 配置（需要先申请证书）
+
+HTTPS 配置已在 nginx.conf 中注释，启用前需要先申请 SSL 证书。
+
+### SSL 证书申请
+
+使用 Let's Encrypt 申请免费 SSL 证书：
+
+```bash
+# 1. 确保域名已解析到服务器
+# 2. 申请证书
+certbot certonly --webroot -w /usr/local/nginx/html -d yongwang.zenmind.site
+
+# 3. 证书申请成功后，编辑 nginx.conf 取消 HTTPS 配置的注释
+vim /usr/local/nginx/conf/nginx.conf
+
+# 4. 测试配置
+/usr/local/nginx/sbin/nginx -t
+
+# 5. 重载 Nginx
+/usr/local/nginx/sbin/nginx -s reload
+```
+
+### 配置管理
+
+```bash
+# 测试 Nginx 配置
+/usr/local/nginx/sbin/nginx -t
+
+# 重载 Nginx 配置
+/usr/local/nginx/sbin/nginx -s reload
+
+# 重启 Nginx
+/usr/local/nginx/sbin/nginx -s stop
+/usr/local/nginx/sbin/nginx
+
+# 查看 Nginx 状态
+ps aux | grep nginx
+```
+
+### 安全特性
+
+Nginx 配置包含以下安全特性：
+
+- **请求限流**: 每秒最多 50 个请求，突发 50 个
+- **连接限制**: 单 IP 最多 20 个并发连接
+- **恶意爬虫过滤**: 自动封禁已知恶意爬虫
+- **敏感路径保护**: 禁止访问敏感文件和目录
+- **HTTP 方法限制**: 只允许 GET、HEAD、POST、PUT、DELETE、OPTIONS
+- **SSL/TLS 加固**: 仅支持 TLS 1.2 和 1.3
+
+### 访问方式
+
+配置完成后，可通过以下方式访问：
+
+- **HTTP**: http://yongwang.zenmind.site
+- **HTTPS** (证书申请后): https://yongwang.zenmind.site
+- **API 文档**: http://yongwang.zenmind.site/swagger-ui.html
+- **健康检查**: http://yongwang.zenmind.site/admin/health
+
 ### 查看日志
 
 ```bash
