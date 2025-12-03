@@ -155,27 +155,11 @@ cd yongwang-admin/bin
 
 #### 配置文件说明
 
-**重要**: 项目使用环境变量管理敏感配置，请按以下步骤配置：
-
-1. **复制配置模板**:
-   ```bash
-   # 复制环境变量模板
-   cp .env.example .env
-
-   # 复制应用配置模板
-   cp yongwang-admin/src/main/resources/application.yml.example yongwang-admin/src/main/resources/application.yml
-   cp yongwang-admin/src/main/resources/application-prod.yml.example yongwang-admin/src/main/resources/application-prod.yml
-
-   # 复制 Docker Compose 配置模板
-   cp docker-compose.yml.example docker-compose.yml
-   cp docker-compose.app-only.yml.example docker-compose.app-only.yml
-   ```
-
-2. **编辑 .env 文件**，填写实际的配置值：
-   - 数据库密码
-   - JWT 密钥
-   - 阿里云 OSS 配置
-   - 微信小程序配置
+项目配置文件已包含在仓库中，如需修改可编辑 `.env` 文件：
+- 数据库密码
+- JWT 密钥
+- 阿里云 OSS 配置
+- 微信小程序配置
 
 #### 端口配置
 

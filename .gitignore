@@ -118,8 +118,6 @@ spring-boot-*.log
 # ============================================
 
 # Docker 数据目录（如果在项目内）
-!docker-compose.yml.example
-!docker-compose.app-only.yml.example
 
 # ============================================
 # 数据库
@@ -128,16 +126,6 @@ spring-boot-*.log
 *.db
 *.sqlite
 *.sqlite3
-
-# ============================================
-# 敏感配置文件
-# ============================================
-
-# 包含敏感信息的配置文件（使用 .example 模板代替）
-!application.yml.example
-!application-prod.yml.example
-!application.properties.example
-!application-prod.properties.example
 
 
 

@@ -27,100 +27,36 @@ DOCKER_COMPOSE_CMD=""
 # 函数定义
 # ============================================
 
-# 检查并加载配置文件
-check_and_load_config() {
-    print_header "检查配置文件"
+# 加载配置文件
+load_config() {
+    print_header "加载配置文件"
 
-    local need_setup=false
-
-    # 检查 .env 文件
-    if [ ! -f ".env" ]; then
-        print_warning ".env 文件不存在"
-        need_setup=true
-    else
-        print_success ".env 文件存在"
-        # 加载环境变量
+    # 加载 .env 文件
+    if [ -f ".env" ]; then
         source .env
         MYSQL_PASSWORD="${DB_PASSWORD}"
-    fi
-
-    # 检查 docker-compose.yml
-    if [ ! -f "docker-compose.yml" ]; then
-        print_warning "docker-compose.yml 文件不存在"
-        need_setup=true
+        print_success "已加载 .env 配置"
     else
-        print_success "docker-compose.yml 文件存在"
+        print_warning ".env 文件不存在，使用默认配置"
     fi
 
-    # 检查 docker-compose.app-only.yml
-    if [ ! -f "docker-compose.app-only.yml" ]; then
-        print_warning "docker-compose.app-only.yml 文件不存在"
-        need_setup=true
+    # 检查 docker-compose 文件
+    if [ -f "docker-compose.yml" ]; then
+        print_success "docker-compose.yml 存在"
     else
-        print_success "docker-compose.app-only.yml 文件存在"
+        print_error "docker-compose.yml 不存在"
+        exit 1
     fi
 
-    # 如果需要设置，提示用户
-    if [ "$need_setup" = true ]; then
-        echo ""
-        print_error "配置文件缺失，需要先设置配置文件"
-        echo ""
-        print_info "请按以下步骤操作："
-        echo ""
-        echo "1. 复制环境变量模板："
-        echo "   cp .env.example .env"
-        echo ""
-        echo "2. 复制 Docker Compose 配置模板："
-        echo "   cp docker-compose.yml.example docker-compose.yml"
-        echo "   cp docker-compose.app-only.yml.example docker-compose.app-only.yml"
-        echo ""
-        echo "3. 编辑 .env 文件，填写实际的配置值"
-        echo ""
-        echo "4. 重新运行此脚本"
-        echo ""
-
-        read -p "是否自动复制配置模板？(y/n) [y]: " auto_copy
-        auto_copy=${auto_copy:-y}
-
-        if [[ "$auto_copy" =~ ^[Yy]$ ]]; then
-            echo ""
-            print_info "正在复制配置模板..."
-
-            if [ ! -f ".env" ] && [ -f ".env.example" ]; then
-                cp .env.example .env
-                print_success "已复制 .env.example -> .env"
-            fi
-
-            if [ ! -f "docker-compose.yml" ] && [ -f "docker-compose.yml.example" ]; then
-                cp docker-compose.yml.example docker-compose.yml
-                print_success "已复制 docker-compose.yml.example -> docker-compose.yml"
-            fi
-
-            if [ ! -f "docker-compose.app-only.yml" ] && [ -f "docker-compose.app-only.yml.example" ]; then
-                cp docker-compose.app-only.yml.example docker-compose.app-only.yml
-                print_success "已复制 docker-compose.app-only.yml.example -> docker-compose.app-only.yml"
-            fi
-
-            echo ""
-            print_warning "配置文件已复制，请编辑 .env 文件填写实际的配置值"
-            echo ""
-            print_info "编辑完成后，重新运行此脚本"
-            exit 0
-        else
-            exit 1
-        fi
-    fi
-
-    # 验证必需的环境变量
-    if [ -z "$MYSQL_PASSWORD" ]; then
-        print_error ".env 文件中缺少 DB_PASSWORD 配置"
-        echo ""
-        print_info "请编辑 .env 文件，设置 DB_PASSWORD 的值"
+    if [ -f "docker-compose.app-only.yml" ]; then
+        print_success "docker-compose.app-only.yml 存在"
+    else
+        print_error "docker-compose.app-only.yml 不存在"
         exit 1
     fi
 
     echo ""
-    print_success "配置文件检查通过"
+    print_success "配置加载完成"
 }
 
 # 打印标题
@@ -657,8 +593,8 @@ check_docker
 
 echo ""
 
-# 检查并加载配置文件
-check_and_load_config
+# 加载配置文件
+load_config
 
 echo ""
 
