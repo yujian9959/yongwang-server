@@ -81,10 +81,12 @@ aliyun:
     url-prefix: ${ALIYUN_OSS_URL_PREFIX:http://your-bucket-name.oss-cn-shanghai.aliyuncs.com}
 
 # 微信小程序配置
+
+# 微信小程序配置
 wechat:
   mini:
-    appid: ${WECHAT_MINI_APPID:your-wechat-appid}
-    secret: ${WECHAT_MINI_SECRET:your-wechat-secret}
+    appid: wxdadcf0b9ac5e7c98
+    secret: fc07e4508b39932c8e3b9272759439b6
 
 # 日志配置
 logging:

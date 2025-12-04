@@ -118,18 +118,24 @@ public class UserService extends ServiceImpl<UserMapper, User> {
     }
 
     /**
-     * 模拟微信登录（创建或获取用户）- 保留兼容
+     * 更新微信会话密钥
      */
-    public User loginByOpenid(String openid, String nickname, String avatar) {
-        User user = getByOpenid(openid);
-        if (user == null) {
-            // 新用户注册
-            user = registerByWechat(openid, null, nickname, avatar);
-        } else {
-            // 更新登录时间
-            updateLoginTime(user.getUid());
-        }
-        return user;
+    public void updateSessionKey(String uid, String sessionKey) {
+        lambdaUpdate()
+                .eq(User::getUid, uid)
+                .set(User::getSessionKey, sessionKey)
+                .update();
+    }
+
+    /**
+     * 更新用户登录信息（登录时间和会话密钥）
+     */
+    public void updateLoginInfo(String uid, String sessionKey) {
+        lambdaUpdate()
+                .eq(User::getUid, uid)
+                .set(User::getLastLoginTime, LocalDateTime.now())
+                .set(User::getSessionKey, sessionKey)
+                .update();
     }
 
     /**

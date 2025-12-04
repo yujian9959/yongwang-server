@@ -27,6 +27,11 @@ public class User extends BaseEntity {
     private String unionid;
 
     /**
+     * 微信会话密钥（用于解密用户敏感数据）
+     */
+    private String sessionKey;
+
+    /**
      * 昵称
      */
     private String nickname;

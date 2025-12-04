@@ -629,6 +629,7 @@ create table yw_user
     uid             varchar(32)                              not null comment '业务主键',
     openid          varchar(100)                             null comment '微信OpenID',
     unionid         varchar(100)                             null comment '微信UnionID',
+    session_key     varchar(100)                             null comment '微信会话密钥',
     nickname        varchar(50)                              null comment '昵称',
     avatar          varchar(255)                             null comment '头像URL',
     phone           varchar(20)                              null comment '手机号',

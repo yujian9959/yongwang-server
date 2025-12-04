@@ -72,14 +72,8 @@ public class WechatService {
 
         // 检查配置
         if (appid == null || appid.isEmpty() || "your-appid-here".equals(appid)) {
-            log.warn("微信小程序AppID未配置，使用模拟模式");
-            return mockSession(code);
-        }
-
-        // 检查是否为开发环境的模拟code（微信开发者工具生成的）
-        if (code != null && code.contains("mock")) {
-            log.warn("检测到模拟code，使用模拟模式: code={}", code);
-            return mockSession(code);
+            log.error("微信小程序AppID未配置");
+            throw new BusinessException(ResultCode.PARAM_ERROR, "微信小程序配置错误，请联系管理员");
         }
 
         String url = String.format(CODE2SESSION_URL, appid, secret, code);
@@ -101,7 +95,7 @@ public class WechatService {
                 // 根据错误码返回不同的错误信息
                 switch (errcode) {
                     case 40029:
-                        throw new BusinessException(ResultCode.PARAM_ERROR, "登录凭证无效");
+                        throw new BusinessException(ResultCode.PARAM_ERROR, "登录凭证无效，请重新登录");
                     case 45011:
                         throw new BusinessException(ResultCode.PARAM_ERROR, "请求过于频繁，请稍后再试");
                     case 40226:
@@ -126,23 +120,8 @@ public class WechatService {
             throw e;
         } catch (Exception e) {
             log.error("调用微信接口异常", e);
-            // 接口调用失败时使用模拟模式
-            log.warn("微信接口调用失败，使用模拟模式");
-            return mockSession(code);
+            throw new BusinessException(ResultCode.PARAM_ERROR, "微信登录失败，请稍后重试");
         }
-    }
-
-    /**
-     * 模拟微信登录（开发环境或配置未完成时使用）
-     */
-    private WxSession mockSession(String code) {
-        WxSession session = new WxSession();
-        // 使用code生成一个稳定的模拟openid，这样同一个code会得到同一个用户
-        String mockOpenid = "mock_" + Math.abs(code.hashCode());
-        session.setOpenid(mockOpenid);
-        session.setSessionKey("mock_session_key");
-        log.info("使用模拟登录: openid={}", mockOpenid);
-        return session;
     }
 
     /**
@@ -163,8 +142,8 @@ public class WechatService {
         String secret = wechatConfig.getSecret();
 
         if (appid == null || appid.isEmpty() || "your-appid-here".equals(appid)) {
-            log.warn("微信小程序AppID未配置");
-            return null;
+            log.error("微信小程序AppID未配置");
+            throw new BusinessException(ResultCode.PARAM_ERROR, "微信小程序配置错误，请联系管理员");
         }
 
         String url = String.format(ACCESS_TOKEN_URL, appid, secret);
@@ -178,14 +157,17 @@ public class WechatService {
             JsonNode jsonNode = objectMapper.readTree(response);
 
             if (jsonNode.has("errcode") && jsonNode.get("errcode").asInt() != 0) {
+                String errmsg = jsonNode.has("errmsg") ? jsonNode.get("errmsg").asText() : "未知错误";
                 log.error("获取access_token失败: {}", response);
-                return null;
+                throw new BusinessException(ResultCode.PARAM_ERROR, "获取微信凭证失败: " + errmsg);
             }
 
             return jsonNode.get("access_token").asText();
+        } catch (BusinessException e) {
+            throw e;
         } catch (Exception e) {
             log.error("获取access_token异常", e);
-            return null;
+            throw new BusinessException(ResultCode.PARAM_ERROR, "获取微信凭证失败，请稍后重试");
         }
     }
 
@@ -197,10 +179,6 @@ public class WechatService {
      */
     public PhoneInfo getPhoneNumber(String phoneCode) {
         String accessToken = getAccessToken();
-        if (accessToken == null) {
-            log.warn("获取access_token失败，使用模拟手机号");
-            return mockPhoneInfo();
-        }
 
         String url = String.format(GET_PHONE_NUMBER_URL, accessToken);
         log.info("调用微信获取手机号接口: phoneCode={}", phoneCode);
@@ -241,19 +219,7 @@ public class WechatService {
             throw e;
         } catch (Exception e) {
             log.error("获取手机号异常", e);
-            throw new BusinessException(ResultCode.PARAM_ERROR, "获取手机号失败");
+            throw new BusinessException(ResultCode.PARAM_ERROR, "获取手机号失败，请稍后重试");
         }
-    }
-
-    /**
-     * 模拟手机号（开发环境使用）
-     */
-    private PhoneInfo mockPhoneInfo() {
-        PhoneInfo info = new PhoneInfo();
-        info.setPhoneNumber("13800138000");
-        info.setPurePhoneNumber("13800138000");
-        info.setCountryCode("86");
-        log.info("使用模拟手机号: {}", info.getPhoneNumber());
-        return info;
     }
 }
